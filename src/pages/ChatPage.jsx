@@ -112,7 +112,16 @@ export default function ChatPage() {
             }
             try {
                 const res = await api.get(`/api/chat/${currentChatId}`);
-                setMessages(res.data.messages);
+                const dbMessages = res.data.messages;
+
+                // Preserve the 'isNew' flag for typewriter animation if the last message matches
+                setMessages(prev => {
+                    return dbMessages.map(dbM => {
+                        const localM = prev.find(p => p.id === dbM.id);
+                        if (localM?.isNew) return { ...dbM, isNew: true };
+                        return dbM;
+                    });
+                });
             } catch (err) {
                 console.error(err);
             }
@@ -124,13 +133,12 @@ export default function ChatPage() {
     useEffect(() => {
         if (initialIdea && !autoSentRef.current) {
             autoSentRef.current = true;
-            // Delay sending slightly so the user sees the text in the input
-            setTimeout(() => {
-                handleSend(null, initialIdea);
-            }, 800);
+
+            // Execute handleSend immediately for the auto-resume flow
+            handleSend(null, initialIdea);
 
             // clear state so back-navigation doesn't re-trigger
-            window.history.replaceState({}, document.title);
+            navigate(location.pathname, { replace: true, state: {} });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [initialIdea]);

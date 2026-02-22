@@ -15,7 +15,7 @@ export default function AuthPage() {
     const [error, setError] = useState('');
     const { login, user } = useAuth();
     const navigate = useNavigate();
-    const pendingIdea = location.state?.idea;
+    const [pendingIdea] = useState(location.state?.idea);
 
     useEffect(() => {
         if (user) navigate('/chat', { replace: true });

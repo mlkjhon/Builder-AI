@@ -166,7 +166,7 @@ export default function LandingPage() {
     }
 
     if (!user) {
-      navigate('/auth', { state: { idea } });
+      navigate('/auth?tab=register', { state: { idea } });
       return;
     }
 
@@ -214,7 +214,7 @@ export default function LandingPage() {
               {/* Input form */}
               <form onSubmit={handleGenerate} className="hero-form">
                 <div className="hero-input-wrap">
-                  <div className="hero-input-icon"><AlignLeft size={20} color="var(--accent)" /></div>
+                  {/* Removed stray icon that appeared on some screens */}
                   <textarea
                     className="hero-textarea"
                     placeholder="Ex: Quero abrir uma cafeteria especializada em cafés especiais e trabalho remoto com ambiente instagramável..."
@@ -648,19 +648,31 @@ export default function LandingPage() {
 
         @media (max-width: 768px) {
           .hero-input-wrap {
-            padding: 14px;
+            padding: 16px;
+            border-radius: 16px;
+          }
+          .hero-textarea {
+            font-size: 15px;
+            min-height: 80px;
           }
           .hero-input-footer {
             flex-direction: column;
             align-items: stretch;
-            gap: 14px;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
           }
           .hero-input-footer button {
             width: 100%;
+            padding: 14px;
+            order: -1; /* Place button above char count on mobile */
+          }
+          .char-count {
+            text-align: center;
           }
           .hero-cta-bottom {
             flex-direction: column;
-            gap: 8px;
+            gap: 12px;
             margin-top: 24px;
           }
         }
