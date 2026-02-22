@@ -40,8 +40,9 @@ router.post('/register', async (req, res) => {
         res.status(201).json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
     } catch (err) {
         console.error('Register error:', err);
-        res.status(500).json({ error: 'Erro interno do servidor' });
+        res.status(500).json({ error: 'Erro interno do servidor', message: err.message, stack: err.stack });
     }
+
 });
 
 // POST /api/auth/login
