@@ -645,6 +645,25 @@ export default function LandingPage() {
           font-weight: 600;
           color: var(--text-muted);
         }
+
+        @media (max-width: 768px) {
+          .hero-input-wrap {
+            padding: 14px;
+          }
+          .hero-input-footer {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 14px;
+          }
+          .hero-input-footer button {
+            width: 100%;
+          }
+          .hero-cta-bottom {
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 24px;
+          }
+        }
       `}</style>
     </div>
   );
