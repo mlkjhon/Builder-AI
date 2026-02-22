@@ -124,12 +124,16 @@ export default function ChatPage() {
     useEffect(() => {
         if (initialIdea && !autoSentRef.current) {
             autoSentRef.current = true;
-            handleSend(null, initialIdea);
+            // Delay sending slightly so the user sees the text in the input
+            setTimeout(() => {
+                handleSend(null, initialIdea);
+            }, 800);
+
             // clear state so back-navigation doesn't re-trigger
             window.history.replaceState({}, document.title);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [initialIdea]);
 
     const handleStopGeneration = () => {
         if (abortController) {
@@ -299,6 +303,19 @@ export default function ChatPage() {
             <Navbar />
 
             <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
+
+                {/* Mobile sidebar overlay */}
+                {sidebarOpen && (
+                    <div
+                        className="sidebar-overlay"
+                        style={{
+                            position: 'absolute', inset: 0, backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 40,
+                            display: window.innerWidth <= 768 ? 'block' : 'none'
+                        }}
+                        onClick={() => setSidebarOpen(false)}
+                    />
+                )}
+
                 {/* Sidebar */}
                 <div className={`chat-sidebar ${sidebarOpen ? 'open' : ''}`}>
                     <div className="sidebar-header">
@@ -493,9 +510,10 @@ export default function ChatPage() {
                                 }}
                                 onKeyDown={e => {
                                     if (e.key === 'Enter' && !e.shiftKey) {
+                                        // Prevent default only on desktop to allow enter on mobile keyboard? 
+                                        // Usually, Enter submits on both, but we keep this behavior consistent
                                         e.preventDefault();
                                         handleSend(e);
-                                        // Reset height after submit
                                         e.target.style.height = 'auto';
                                     }
                                 }}

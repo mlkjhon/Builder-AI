@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Rocket, Moon, Sun, LogOut } from 'lucide-react';
+import { Moon, Sun, LogOut, Menu } from 'lucide-react';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
@@ -20,23 +20,45 @@ export default function Navbar() {
         <>
             <nav className="navbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                 <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-                    <Link to={user ? '/chat' : '/'} className="navbar-logo" style={{ fontSize: '20px', letterSpacing: '-0.5px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <div className="logo-icon" style={{
-                            background: 'linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)',
-                            borderRadius: '10px',
-                            padding: '6px',
+                    <Link to={user ? '/chat' : '/'} className="navbar-logo" style={{ fontSize: '20px', letterSpacing: '-1px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div className="logo-base" style={{
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            position: 'relative',
+                            width: 36,
+                            height: 36,
                         }}>
-                            <Rocket size={18} strokeWidth={2.5} color="white" />
+                            <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ filter: 'drop-shadow(0px 4px 8px rgba(0, 198, 167, 0.4))' }}>
+                                {/* Base Hexagon/Cube Framework */}
+                                <path d="M20 2L35.5885 11V29L20 38L4.41154 29V11L20 2Z" stroke="url(#paint0_linear)" strokeWidth="2.5" strokeLinejoin="round" />
+                                {/* Inner connections */}
+                                <path d="M20 2V20M35.5885 11L20 20M4.41154 11L20 20M20 38V20M35.5885 29L20 20M4.41154 29L20 20" stroke="url(#paint1_linear)" strokeWidth="1.5" strokeLinecap="round" opacity="0.8" />
+                                {/* Center Node */}
+                                <circle cx="20" cy="20" r="4" fill="url(#paint2_linear)" />
+
+                                <defs>
+                                    <linearGradient id="paint0_linear" x1="4.41154" y1="2" x2="35.5885" y2="38" gradientUnits="userSpaceOnUse">
+                                        <stop stopColor="#00c6a7" />
+                                        <stop offset="1" stopColor="#6366f1" />
+                                    </linearGradient>
+                                    <linearGradient id="paint1_linear" x1="20" y1="2" x2="20" y2="38" gradientUnits="userSpaceOnUse">
+                                        <stop stopColor="#00c6a7" stopOpacity="0.8" />
+                                        <stop offset="1" stopColor="#6366f1" stopOpacity="0.8" />
+                                    </linearGradient>
+                                    <linearGradient id="paint2_linear" x1="16" y1="16" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                                        <stop stopColor="#ffffff" />
+                                        <stop offset="1" stopColor="#e2e8f0" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>Startup Builder</span>
+                            <span style={{ fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'Inter, sans-serif' }}>Startup Builder</span>
                             <span style={{
                                 fontWeight: 900,
                                 marginLeft: 4,
-                                background: 'linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)',
+                                background: 'linear-gradient(135deg, var(--accent) 0%, #4facfe 100%)',
                                 WebkitBackgroundClip: 'text',
                                 WebkitTextFillColor: 'transparent',
                             }}>AI</span>
