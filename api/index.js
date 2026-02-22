@@ -37,11 +37,13 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 // Health check
 app.get('/api/health', async (req, res) => {
     let dbStatus = false;
+    let dbError = null;
     try {
         const pool = require('./db');
         await pool.query('SELECT 1');
         dbStatus = true;
     } catch (err) {
+        dbError = err.message;
         console.error('Health check DB error:', err.message);
     }
 
@@ -54,10 +56,12 @@ app.get('/api/health', async (req, res) => {
             jwt_configured: !!process.env.JWT_SECRET
         },
         connectivity: {
-            database: dbStatus
+            database: dbStatus,
+            dbError: dbError
         }
     });
 });
+
 
 
 // 404
