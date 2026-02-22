@@ -36,7 +36,15 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Startup Builder AI Server running 🚀' });
+    res.json({
+        status: 'ok',
+        message: 'Startup Builder AI Server running 🚀',
+        env: {
+            database: !!process.env.DATABASE_URL,
+            gemini: !!process.env.GEMINI_API_KEY,
+            jwt: !!process.env.JWT_SECRET
+        }
+    });
 });
 
 // 404
@@ -52,14 +60,16 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Erro interno do servidor' });
 });
 
+// Migração automática (importante para Neon/Vercel)
+autoMigrate().catch(err => console.error("Migration failed", err));
+
 // Solo correr listen si no estamos en Vercel
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
-    autoMigrate().then(() => {
-        app.listen(PORT, () => {
-            console.log(`🚀 Startup Builder AI Server rodando na porta ${PORT}`);
-        });
-    }).catch(err => console.error("Migration failed", err));
+    app.listen(PORT, () => {
+        console.log(`🚀 Startup Builder AI Server rodando na porta ${PORT}`);
+    });
 }
 
 module.exports = app;
+
 
