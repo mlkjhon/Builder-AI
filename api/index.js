@@ -41,6 +41,8 @@ app.get('/api/health', async (req, res) => {
     let usersTableExists = false;
     let uuidStatus = false;
     let uuidError = null;
+    let foundColumns = [];
+
 
     try {
         const pool = require('./db');
@@ -55,6 +57,15 @@ app.get('/api/health', async (req, res) => {
             );
         `);
         usersTableExists = tableCheck.rows[0].exists;
+
+        if (usersTableExists) {
+            const columnsCheck = await pool.query(`
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_name = 'users'
+            `);
+            foundColumns = columnsCheck.rows.map(r => r.column_name);
+        }
 
         // Check if uuid-ossp extension and function work
         try {
@@ -79,12 +90,14 @@ app.get('/api/health', async (req, res) => {
         connectivity: {
             database: dbStatus,
             users_table: usersTableExists,
+            columns: foundColumns,
             uuid_working: uuidStatus,
             uuid_error: uuidError,
             dbError: dbError
         }
     });
 });
+
 
 
 
