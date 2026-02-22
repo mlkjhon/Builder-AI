@@ -38,10 +38,20 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 app.get('/api/health', async (req, res) => {
     let dbStatus = false;
     let dbError = null;
+    let usersTableExists = false;
     try {
         const pool = require('./db');
         await pool.query('SELECT 1');
         dbStatus = true;
+
+        // Check if users table exists
+        const tableCheck = await pool.query(`
+            SELECT EXISTS (
+                SELECT FROM information_schema.tables 
+                WHERE table_name = 'users'
+            );
+        `);
+        usersTableExists = tableCheck.rows[0].exists;
     } catch (err) {
         dbError = err.message;
         console.error('Health check DB error:', err.message);
@@ -57,10 +67,12 @@ app.get('/api/health', async (req, res) => {
         },
         connectivity: {
             database: dbStatus,
+            users_table: usersTableExists,
             dbError: dbError
         }
     });
 });
+
 
 
 
