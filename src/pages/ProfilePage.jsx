@@ -22,6 +22,8 @@ export default function ProfilePage() {
     const [avatarPreview, setAvatarPreview] = useState(user?.avatar_url || null);
     const [avatarFile, setAvatarFile] = useState(null);
     const [profileData, setProfileData] = useState(null);
+    const [twoFactor, setTwoFactor] = useState(user?.two_factor_enabled || false);
+    const [tfaLoading, setTfaLoading] = useState(false);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -30,6 +32,7 @@ export default function ProfilePage() {
                 setProfileData(res.data);
                 setName(res.data.name);
                 setAvatarPreview(res.data.avatar_url || null);
+                setTwoFactor(res.data.two_factor_enabled || false);
             } catch (err) {
                 console.error(err);
             }
@@ -67,6 +70,26 @@ export default function ProfilePage() {
             toast.error('Erro ao salvar o perfil. Tente novamente.');
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleToggle2FA = async () => {
+        setTfaLoading(true);
+        try {
+            const newState = !twoFactor;
+            await api.patch('/api/profile/2fa', { enabled: newState });
+
+            // Update auth context
+            const token = localStorage.getItem('token');
+            login(token, { ...user, two_factor_enabled: newState });
+
+            setTwoFactor(newState);
+            toast.success(newState ? '2FA ativado com sucesso!' : '2FA desativado.');
+        } catch (err) {
+            console.error(err);
+            toast.error('Erro ao atualizar 2FA.');
+        } finally {
+            setTfaLoading(false);
         }
     };
 
@@ -189,6 +212,30 @@ export default function ProfilePage() {
                                         Fazer upgrade <ArrowRight size={13} />
                                     </button>
                                 )}
+                            </div>
+
+                            {/* Security card */}
+                            <div className="card">
+                                <h3 style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 16, textTransform: 'uppercase', letterSpacing: '0.5px' }}>Segurança</h3>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                        <div style={{ background: 'var(--bg-secondary)', borderRadius: 10, padding: 10, display: 'flex', color: twoFactor ? 'var(--accent)' : 'var(--text-muted)' }}>
+                                            <Shield size={20} />
+                                        </div>
+                                        <div>
+                                            <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: 14 }}>Autenticação 2FA</div>
+                                            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>Proteja sua conta com um código extra</div>
+                                        </div>
+                                    </div>
+                                    <button
+                                        className={`btn btn-sm ${twoFactor ? 'btn-secondary' : 'btn-primary'}`}
+                                        onClick={handleToggle2FA}
+                                        disabled={tfaLoading}
+                                        style={{ minWidth: 100 }}
+                                    >
+                                        {tfaLoading ? '...' : (twoFactor ? 'Desativar' : 'Ativar')}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

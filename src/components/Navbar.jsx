@@ -102,13 +102,16 @@ export default function Navbar() {
                 </div>
 
                 <div className="navbar-actions" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
-                    <button
-                        onClick={() => setMobileOpen(!mobileOpen)}
-                        className="btn btn-ghost btn-icon mobile-menu-toggle"
-                        style={{ display: 'none' }}
-                    >
-                        {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-                    </button>
+                    {/* Mobile Toggle - Only for Guests */}
+                    {!user && (
+                        <button
+                            onClick={() => setMobileOpen(!mobileOpen)}
+                            className="btn btn-ghost btn-icon mobile-menu-toggle"
+                            style={{ display: 'none' }}
+                        >
+                            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                        </button>
+                    )}
 
                     <button
                         onClick={toggleTheme}
@@ -148,29 +151,16 @@ export default function Navbar() {
                     )}
                 </div>
             </nav>
-            {/* Mobile Menu Overlay */}
-            {mobileOpen && (
+            {/* Mobile Menu Overlay - Only for Guests */}
+            {mobileOpen && !user && (
                 <div className="mobile-nav-overlay fade-in" onClick={() => setMobileOpen(false)}>
                     <div className="mobile-nav-menu" onClick={e => e.stopPropagation()}>
                         <div className="mobile-nav-links">
-                            {user ? (
-                                <>
-                                    <Link to="/chat" onClick={() => setMobileOpen(false)}><Sparkles size={18} /> Novo Chat</Link>
-                                    <Link to="/dashboard" onClick={() => setMobileOpen(false)}>Histórico</Link>
-                                    <Link to="/plans" onClick={() => setMobileOpen(false)}>Planos</Link>
-                                    <Link to="/profile" onClick={() => setMobileOpen(false)}>Meu Perfil</Link>
-                                    {isDev && <Link to="/admin" onClick={() => setMobileOpen(false)} style={{ color: 'var(--danger)' }}>Painel Dev</Link>}
-                                    <button onClick={handleLogout} className="btn btn-secondary" style={{ marginTop: 20 }}>Sair</button>
-                                </>
-                            ) : (
-                                <>
-                                    <a href="/#como-funciona" onClick={() => setMobileOpen(false)}>Como Funciona</a>
-                                    <a href="/#recursos" onClick={() => setMobileOpen(false)}>Recursos</a>
-                                    <Link to="/plans" onClick={() => setMobileOpen(false)}>Planos</Link>
-                                    <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn btn-ghost">Entrar</Link>
-                                    <Link to="/auth?tab=register" onClick={() => setMobileOpen(false)} className="btn btn-primary">Começar grátis</Link>
-                                </>
-                            )}
+                            <a href="/#como-funciona" onClick={() => setMobileOpen(false)}>Como Funciona</a>
+                            <a href="/#recursos" onClick={() => setMobileOpen(false)}>Recursos</a>
+                            <Link to="/plans" onClick={() => setMobileOpen(false)}>Planos</Link>
+                            <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn btn-ghost">Entrar</Link>
+                            <Link to="/auth?tab=register" onClick={() => setMobileOpen(false)} className="btn btn-primary">Começar grátis</Link>
                         </div>
                     </div>
                 </div>

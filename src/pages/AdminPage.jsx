@@ -130,12 +130,12 @@ export default function AdminPage() {
                                     <tr><td colSpan="5" style={{ padding: 32, textAlign: 'center', color: 'var(--text-muted)' }}>Carregando...</td></tr>
                                 ) : usersList.map(u => (
                                     <tr key={u.id} style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }} onMouseOver={e => e.currentTarget.style.background = 'var(--bg-secondary)'} onMouseOut={e => e.currentTarget.style.background = 'transparent'}>
-                                        <td style={{ padding: 16, fontSize: 13, color: 'var(--text-muted)' }}>{u.id}</td>
-                                        <td style={{ padding: 16 }}>
+                                        <td data-label="ID" style={{ padding: 16, fontSize: 13, color: 'var(--text-muted)' }}>{u.id}</td>
+                                        <td data-label="Nome & Email" style={{ padding: 16 }}>
                                             <div style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{u.name}</div>
                                             <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{u.email}</div>
                                         </td>
-                                        <td style={{ padding: 16 }}>
+                                        <td data-label="Cargo" style={{ padding: 16 }}>
                                             <select
                                                 value={u.role || 'user'}
                                                 onChange={(e) => handleRoleChange(u.id, e.target.value)}
@@ -151,7 +151,7 @@ export default function AdminPage() {
                                                 <option value="admin">ADMIN (DEV)</option>
                                             </select>
                                         </td>
-                                        <td style={{ padding: 16 }}>
+                                        <td data-label="Plano" style={{ padding: 16 }}>
                                             <select
                                                 value={u.active_plan || 'free'}
                                                 onChange={(e) => handlePlanChange(u.id, e.target.value)}
@@ -166,7 +166,7 @@ export default function AdminPage() {
                                                 <option value="business">Premium</option>
                                             </select>
                                         </td>
-                                        <td style={{ padding: 16 }}>
+                                        <td data-label="Status" style={{ padding: 16 }}>
                                             <select
                                                 value={u.status || 'active'}
                                                 onChange={(e) => handleStatusChange(u.id, e.target.value)}
@@ -184,7 +184,7 @@ export default function AdminPage() {
                                                 <option value="inactive">INATIVO</option>
                                             </select>
                                         </td>
-                                        <td style={{ padding: 16 }}>
+                                        <td data-label="Ações" style={{ padding: 16 }}>
                                             <div style={{ display: 'flex', gap: 8 }}>
                                                 <button
                                                     onClick={() => handleDeleteUser(u.id)}
@@ -206,6 +206,25 @@ export default function AdminPage() {
                 <style>{`
                     .spin { animation: spin 1s linear infinite; }
                     @keyframes spin { 100% { transform: rotate(360deg); } }
+
+                    @media (max-width: 768px) {
+                        .container { padding: 0 16px; margin-top: 20px !important; }
+                        h1 { fontSize: 24px !important; }
+                        p { paddingLeft: 0 !important; fontSize: 13px !important; }
+                        
+                        table thead { display: none; }
+                        table, table tbody, table tr, table td { display: block; width: 100%; }
+                        table tr { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 12px; padding: 8px; background: var(--bg-card); }
+                        table td { padding: 8px 12px !important; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); }
+                        table td:last-child { border-bottom: none; }
+                        table td::before {
+                            content: attr(data-label);
+                            font-weight: 700;
+                            font-size: 11px;
+                            text-transform: uppercase;
+                            color: var(--text-muted);
+                        }
+                    }
                 `}</style>
             </div>
         </div>

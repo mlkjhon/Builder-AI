@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
-import { Sparkles, MessageSquare, Send, Bot, User, Menu, Trash2, Plus, Settings, Save, Heart, MoreVertical, Edit3, Paperclip, X } from 'lucide-react';
+import { Sparkles, MessageSquare, Send, Bot, User, Menu, Trash2, Plus, Settings, Save, Heart, MoreVertical, Edit3, Paperclip, X, Shield, ShieldCheck, LogOut } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import toast from 'react-hot-toast';
 
@@ -27,9 +27,10 @@ const TypewriterMessage = ({ content }) => {
 };
 
 export default function ChatPage() {
-    const { user, login } = useAuth();
+    const { user, login, logout } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
+    const isDev = user?.role === 'admin';
 
     // The idea passed from LandingPage or AuthPage
     const initialIdea = location.state?.idea || location.state?.autoGenerate || '';
@@ -52,6 +53,7 @@ export default function ChatPage() {
     const [editingId, setEditingId] = useState(null);
     const [editingTitle, setEditingTitle] = useState('');
     const [imageFiles, setImageFiles] = useState([]);
+    const [showTFANag, setShowTFANag] = useState(false);
     const fileInputRef = useRef(null);
     const autoSentRef = useRef(false); // guard to prevent sending twice
 
@@ -64,6 +66,13 @@ export default function ChatPage() {
 
     useEffect(() => {
         if (user?.preferences) setPreferences(user.preferences);
+
+        // Show 2FA nag if not enabled and not shown this session
+        const nagShown = sessionStorage.getItem('tfa-nag-shown');
+        if (user && !user.two_factor_enabled && !nagShown) {
+            setShowTFANag(true);
+            sessionStorage.setItem('tfa-nag-shown', 'true');
+        }
     }, [user]);
 
     const savePreferences = async () => {
@@ -400,6 +409,24 @@ export default function ChatPage() {
                             ))
                         )}
                     </div>
+
+                    {/* Desktop/Mobile Navigation Links in Sidebar */}
+                    <div className="sidebar-footer-links" style={{ padding: '16px', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <Link to="/plans" className="chat-nav-item" onClick={() => window.innerWidth <= 768 && setSidebarOpen(false)}>
+                            <Shield size={16} /> Planos
+                        </Link>
+                        <Link to="/profile" className="chat-nav-item" onClick={() => window.innerWidth <= 768 && setSidebarOpen(false)}>
+                            <User size={16} /> Meu Perfil
+                        </Link>
+                        {user?.role === 'admin' && (
+                            <Link to="/admin" className="chat-nav-item" style={{ color: 'var(--danger)' }} onClick={() => window.innerWidth <= 768 && setSidebarOpen(false)}>
+                                <ShieldCheck size={16} /> Painel Dev
+                            </Link>
+                        )}
+                        <button onClick={() => { logout(); navigate('/'); }} className="chat-nav-item" style={{ width: '100%', textAlign: 'left', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
+                            <LogOut size={16} /> Sair
+                        </button>
+                    </div>
                 </div>
 
                 {/* Main Chat Area */}
@@ -619,6 +646,36 @@ export default function ChatPage() {
                     </div>
                 )}
             </div>
+
+            {/* 2FA Nag Modal */}
+            {showTFANag && (
+                <div className="modal-overlay fade-in" style={{ zIndex: 10001, backdropFilter: 'blur(16px)', backgroundColor: 'rgba(0,0,0,0.8)' }}>
+                    <div className="modal-container scale-up" style={{ maxWidth: 400, textAlign: 'center', padding: '48px 32px 32px' }}>
+                        <div style={{ background: 'rgba(0, 198, 167, 0.1)', width: 80, height: 80, borderRadius: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', color: 'var(--accent)' }}>
+                            <Shield size={40} />
+                        </div>
+                        <h2 style={{ fontSize: 24, fontWeight: 800, color: 'var(--text-primary)', marginBottom: 12 }}>Reforce sua segurança</h2>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: 14, lineHeight: 1.6, marginBottom: 32 }}>
+                            Sua conta ainda não possui autenticação de dois fatores ativa. Ative agora para proteger seus planos de negócio.
+                        </p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                            <button
+                                onClick={() => { setShowTFANag(false); navigate('/profile'); }}
+                                className="btn btn-primary btn-full"
+                            >
+                                <ShieldCheck size={18} /> Autenticar agora
+                            </button>
+                            <button
+                                onClick={() => setShowTFANag(false)}
+                                className="btn btn-ghost"
+                                style={{ color: 'var(--text-muted)' }}
+                            >
+                                Autenticar mais tarde
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <style>{`
                 .chat-sidebar {

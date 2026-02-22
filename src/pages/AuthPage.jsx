@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api';
 import Navbar from '../components/Navbar';
-import { ArrowRight, ArrowLeft, UserPlus, LogIn, Mail, Lock, User as UserIcon } from 'lucide-react';
+import { ArrowRight, ArrowLeft, UserPlus, LogIn, Mail, Lock, User as UserIcon, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 export default function AuthPage() {
@@ -12,6 +12,9 @@ export default function AuthPage() {
     const [tab, setTab] = useState(searchParams.get('tab') === 'register' ? 'register' : 'login');
     const [form, setForm] = useState({ name: '', email: '', password: '' });
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [show2FA, setShow2FA] = useState(false);
+    const [twoFactorCode, setTwoFactorCode] = useState('');
     const [error, setError] = useState('');
     const { login, user } = useAuth();
     const navigate = useNavigate();
@@ -35,6 +38,24 @@ export default function AuthPage() {
                 : { name: form.name, email: form.email, password: form.password };
 
             const res = await api.post(endpoint, payload);
+
+            // Mock 2FA check: if user has 2FA enabled, stop and show 2FA input
+            if (tab === 'login' && res.data.user.two_factor_enabled && !show2FA) {
+                setShow2FA(true);
+                setLoading(false);
+                toast.success('Por favor, insira seu código 2FA');
+                return;
+            }
+
+            // If show2FA is active, verify code (simulated check for '123456')
+            if (show2FA) {
+                if (twoFactorCode !== '123456') {
+                    toast.error('Código 2FA inválido. (Dica: Use 123456)');
+                    setLoading(false);
+                    return;
+                }
+            }
+
             login(res.data.token, res.data.user);
 
             if (pendingIdea) {
@@ -137,15 +158,44 @@ export default function AuthPage() {
                                 <input
                                     className="form-input has-icon"
                                     name="password"
-                                    type="password"
+                                    type={showPassword ? 'text' : 'password'}
                                     placeholder={tab === 'register' ? 'Mínimo 6 caracteres' : '••••••••'}
                                     value={form.password}
                                     onChange={handleChange}
                                     required
                                     minLength={6}
+                                    style={{ paddingRight: 40 }}
                                 />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', display: 'flex' }}
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
                             </div>
                         </div>
+
+                        {show2FA && (
+                            <div className="form-group fade-in" style={{ marginTop: 16, padding: 16, background: 'var(--bg-secondary)', borderRadius: 16, border: '1px solid var(--accent)' }}>
+                                <label className="form-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <ShieldCheck size={16} className="text-accent" /> Código de Autenticação (2FA)
+                                </label>
+                                <input
+                                    className="form-input"
+                                    type="text"
+                                    placeholder="123456"
+                                    value={twoFactorCode}
+                                    onChange={e => setTwoFactorCode(e.target.value)}
+                                    maxLength={6}
+                                    required
+                                    style={{ textAlign: 'center', fontSize: 20, letterSpacing: 8, fontWeight: 800 }}
+                                />
+                                <p style={{ fontSize: 11, color: 'var(--text-muted)', marginTop: 8, textAlign: 'center' }}>
+                                    Insira o código gerado pelo seu app de autenticação.
+                                </p>
+                            </div>
+                        )}
 
                         <button
                             type="submit"
