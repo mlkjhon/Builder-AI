@@ -66,10 +66,7 @@ export default function AuthPage() {
         } catch (err) {
             const errorMsg = err.response?.data?.error || 'Algo deu errado. Tente novamente.';
             setError(errorMsg);
-            // Only toast if it's not a common validation error already shown in UI
-            if (errorMsg === 'Algo deu errado. Tente novamente.') {
-                toast.error(errorMsg);
-            }
+            // Redundant toast removed to keep UI clean
         } finally {
             setLoading(false);
         }

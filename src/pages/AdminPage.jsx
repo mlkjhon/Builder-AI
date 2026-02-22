@@ -208,43 +208,45 @@ export default function AdminPage() {
                     @keyframes spin { 100% { transform: rotate(360deg); } }
 
                     @media (max-width: 768px) {
-                        .container { padding: 0 12px; margin-top: 20px !important; }
+                        .container { padding: 0 12px !important; margin-top: 20px !important; }
                         h1 { font-size: 22px !important; }
-                        h1 svg { width: 24px; height: 24px; }
+                        h1 svg { width: 24px !important; height: 24px !important; }
                         p { padding-left: 0 !important; font-size: 13px !important; margin-top: 2px !important; }
                         
                         .card { padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }
                         .card > div:first-child { padding: 16px 4px !important; background: transparent !important; }
 
-                        table thead { display: none; }
-                        table, table tbody, table tr, table td { display: block; width: 100%; }
+                        table thead { display: none !important; }
+                        table, table tbody, table tr, table td { display: block !important; width: 100% !important; }
                         table tr { 
-                            margin-bottom: 20px; 
-                            border: 1px solid var(--border); 
-                            border-radius: 16px; 
-                            padding: 12px; 
-                            background: var(--bg-card); 
-                            box-shadow: var(--shadow-sm);
+                            margin-bottom: 20px !important; 
+                            border: 1px solid var(--border) !important; 
+                            border-radius: 16px !important; 
+                            padding: 12px !important; 
+                            background: var(--bg-card) !important; 
+                            box-shadow: var(--shadow-sm) !important;
                         }
                         table td { 
                             padding: 12px 8px !important; 
-                            display: flex; 
-                            justify-content: space-between; 
-                            align-items: center; 
-                            border-bottom: 1px solid var(--border); 
-                            font-size: 14px;
+                            display: flex !important; 
+                            justify-content: space-between !important; 
+                            align-items: center !important; 
+                            border-bottom: 1px solid var(--border) !important; 
+                            font-size: 14px !important;
+                            text-align: right !important;
                         }
-                        table td:last-child { border-bottom: none; padding-top: 16px !important; }
+                        table td:last-child { border-bottom: none !important; padding-top: 16px !important; justify-content: center !important; }
                         table td::before {
-                            content: attr(data-label);
-                            font-weight: 700;
-                            font-size: 11px;
-                            text-transform: uppercase;
-                            color: var(--text-muted);
-                            margin-right: 16px;
+                            content: attr(data-label) !important;
+                            font-weight: 700 !important;
+                            font-size: 11px !important;
+                            text-transform: uppercase !important;
+                            color: var(--text-muted) !important;
+                            margin-right: 16px !important;
+                            text-align: left !important;
                         }
                         
-                        select { width: auto; max-width: 160px; }
+                        select { width: auto !important; max-width: 160px !important; }
                     }
                 `}</style>
             </div>
