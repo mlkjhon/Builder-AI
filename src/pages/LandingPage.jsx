@@ -307,6 +307,38 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Tech Stack / Novidades */}
+        <section className="features-section" id="stack" style={{ paddingTop: 0 }}>
+          <div className="container" style={{ textAlign: 'center' }}>
+            <div className="section-label" style={{ justifyContent: 'center', marginBottom: 24 }}>Tecnologias de Ponta</div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 40, opacity: 0.6 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700 }}><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" width="24" /> React 18</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700 }}><img src="https://www.vectorlogo.zone/logos/google_gemini/google_gemini-icon.svg" width="24" /> Gemini Pro 1.5</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700 }}><img src="https://www.vectorlogo.zone/logos/supabase/supabase-icon.svg" width="24" /> Supabase DB</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700 }}><img src="https://www.vectorlogo.zone/logos/postgresql/postgresql-icon.svg" width="24" /> PostgreSQL</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700 }}><img src="https://www.vectorlogo.zone/logos/vercel/vercel-icon.svg" width="24" /> Vercel Edge</div>
+            </div>
+
+            <div style={{ marginTop: 60, padding: 32, background: 'rgba(0, 198, 167, 0.05)', borderRadius: 24, border: '1px solid rgba(0, 198, 167, 0.1)' }}>
+              <h3 style={{ fontSize: 20, fontWeight: 800, color: 'var(--accent)', marginBottom: 12 }}>🚀 Novidades da Versão 2.0</h3>
+              <div className="grid-3" style={{ textAlign: 'left', gap: 24 }}>
+                <div>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', marginBottom: 4 }}>Botão de Interrupção</strong>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Controle total sobre as respostas da IA, pare a geração a qualquer momento.</p>
+                </div>
+                <div>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', marginBottom: 4 }}>IA Personalizada</strong>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>A IA agora lembra do seu estilo de código e tom de voz preferido.</p>
+                </div>
+                <div>
+                  <strong style={{ color: 'var(--text-primary)', display: 'block', marginBottom: 4 }}>Segurança Bancária</strong>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Conexão SSL criptografada com Supabase para proteger seus dados.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Planos */}
         <section className="features-section" id="planos" style={{ borderTop: 'none', background: 'var(--bg-primary)' }}>
           <div className="container" style={{ textAlign: 'center' }}>
