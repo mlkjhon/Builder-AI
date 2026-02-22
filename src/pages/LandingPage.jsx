@@ -214,7 +214,7 @@ export default function LandingPage() {
               {/* Input form */}
               <form onSubmit={handleGenerate} className="hero-form">
                 <div className="hero-input-wrap">
-                  {/* Removed stray icon that appeared on some screens */}
+                  {/* Icon removed for better mobile spacing */}
                   <textarea
                     className="hero-textarea"
                     placeholder="Ex: Quero abrir uma cafeteria especializada em cafés especiais e trabalho remoto com ambiente instagramável..."
@@ -365,7 +365,7 @@ export default function LandingPage() {
                 ) : (
                   <button
                     className="btn btn-secondary btn-full"
-                    onClick={() => user ? navigate('/chat') : navigate('/auth')}
+                    onClick={() => user ? navigate('/chat') : navigate('/auth?tab=register')}
                   >
                     {user ? 'Acessar Chat' : 'Criar conta grátis'}
                   </button>
@@ -517,12 +517,14 @@ export default function LandingPage() {
         .hero-content { text-align: center; max-width: 760px; margin: 0 auto; }
 
         .hero-title {
-          font-size: clamp(28px, 4.5vw, 46px);
+          font-size: clamp(24px, 7vw, 44px);
           font-weight: 900;
           letter-spacing: -1.5px;
           line-height: 1.1;
           color: var(--text-primary);
           margin-bottom: 20px;
+          width: 100%;
+          overflow-wrap: break-word;
         }
 
         .hero-gradient {
@@ -540,7 +542,7 @@ export default function LandingPage() {
           line-height: 1.7;
         }
 
-        .hero-form { max-width: 680px; margin: 0 auto 32px; }
+        .hero-form { width: 100%; max-width: 680px; margin: 0 auto 32px; }
 
         .hero-input-wrap {
           background: var(--bg-card);
@@ -549,15 +551,13 @@ export default function LandingPage() {
           padding: 20px;
           transition: var(--transition);
           box-shadow: var(--shadow-md);
+          width: 100%;
+          box-sizing: border-box;
         }
 
         .hero-input-wrap:focus-within {
           border-color: var(--accent);
           box-shadow: var(--shadow-lg), 0 0 0 3px rgba(0,198,167,0.1);
-        }
-
-        .hero-input-icon {
-          margin-bottom: 10px;
         }
 
         .hero-textarea {
@@ -647,6 +647,7 @@ export default function LandingPage() {
         }
 
         @media (max-width: 768px) {
+          .hero-section { padding: 40px 0 60px; }
           .hero-input-wrap {
             padding: 16px;
             border-radius: 16px;
@@ -665,7 +666,7 @@ export default function LandingPage() {
           .hero-input-footer button {
             width: 100%;
             padding: 14px;
-            order: -1; /* Place button above char count on mobile */
+            order: -1;
           }
           .char-count {
             text-align: center;
@@ -674,6 +675,11 @@ export default function LandingPage() {
             flex-direction: column;
             gap: 12px;
             margin-top: 24px;
+          }
+          .container {
+            padding: 0 20px;
+            width: 100%;
+            overflow: hidden;
           }
         }
       `}</style>

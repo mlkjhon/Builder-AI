@@ -133,8 +133,7 @@ export default function ChatPage() {
     useEffect(() => {
         if (initialIdea && !autoSentRef.current) {
             autoSentRef.current = true;
-
-            // Execute handleSend immediately for the auto-resume flow
+            // Immediate send for seamless flow
             handleSend(null, initialIdea);
 
             // clear state so back-navigation doesn't re-trigger
