@@ -176,7 +176,8 @@ export default function LandingPage() {
     try {
       // Instead of relying on a dedicated endpoint, we just pass the idea to ChatPage
       // ChatPage handles the initial POST /api/chat if needed
-      navigate('/chat', { state: { autoGenerate: idea } });
+      // Use 'idea' as the consistent key for state transfer
+      navigate('/chat', { state: { idea } });
     } catch (err) {
       setError(err.response?.data?.error || 'Erro ao gerar plano. Tente novamente.');
     } finally {
@@ -242,7 +243,7 @@ export default function LandingPage() {
               </form>
 
               {/* Marquee Examples */}
-              <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+              <div style={{ width: '100%', maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
                 <span style={{ fontSize: 13, color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 1 }}>Ou explore ideias:</span>
                 <div className="marquee-container">
                   <div className="marquee-content">
@@ -514,7 +515,7 @@ export default function LandingPage() {
           animation-delay: 2s;
         }
 
-        .hero-content { text-align: center; max-width: 760px; margin: 0 auto; }
+        .hero-content { text-align: center; width: 100%; max-width: 760px; margin: 0 auto; }
 
         .hero-title {
           font-size: clamp(24px, 7vw, 44px);
@@ -581,6 +582,7 @@ export default function LandingPage() {
           margin-top: 14px;
           padding-top: 14px;
           border-top: 1px solid var(--border);
+          width: 100%; /* Ensure it doesn't expand past parent */
         }
 
         .char-count { font-size: 12px; color: var(--text-muted); }

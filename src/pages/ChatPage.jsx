@@ -32,7 +32,7 @@ export default function ChatPage() {
     const location = useLocation();
 
     // The idea passed from LandingPage or AuthPage
-    const initialIdea = location.state?.autoGenerate || '';
+    const initialIdea = location.state?.idea || location.state?.autoGenerate || '';
     // Chat ID passed from DashboardPage
     const openChatId = location.state?.openChatId || null;
 

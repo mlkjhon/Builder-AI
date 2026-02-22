@@ -38,7 +38,7 @@ export default function AuthPage() {
             login(res.data.token, res.data.user);
 
             if (pendingIdea) {
-                navigate('/chat', { state: { autoGenerate: pendingIdea } });
+                navigate('/chat', { state: { idea: pendingIdea } });
             } else {
                 navigate('/chat');
             }

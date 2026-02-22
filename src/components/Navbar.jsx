@@ -1,15 +1,19 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { Moon, Sun, LogOut, Menu } from 'lucide-react';
+import { Moon, Sun, LogOut, Menu, X, Sparkles } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Navbar() {
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
 
+    const [mobileOpen, setMobileOpen] = useState(false);
+
     const handleLogout = () => {
         logout();
+        setMobileOpen(false);
         navigate('/');
     };
 
@@ -18,7 +22,7 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="navbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+            <nav className="navbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', position: 'relative', zIndex: 1000 }}>
                 <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
                     <Link to={user ? '/chat' : '/'} className="navbar-logo" style={{ fontSize: '20px', letterSpacing: '-1px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <div className="logo-base" style={{
@@ -99,6 +103,14 @@ export default function Navbar() {
 
                 <div className="navbar-actions" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
                     <button
+                        onClick={() => setMobileOpen(!mobileOpen)}
+                        className="btn btn-ghost btn-icon mobile-menu-toggle"
+                        style={{ display: 'none' }}
+                    >
+                        {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                    </button>
+
+                    <button
                         onClick={toggleTheme}
                         className="btn btn-ghost btn-icon"
                         title="Alternar Tema"
@@ -136,9 +148,72 @@ export default function Navbar() {
                     )}
                 </div>
             </nav>
+            {/* Mobile Menu Overlay */}
+            {mobileOpen && (
+                <div className="mobile-nav-overlay fade-in" onClick={() => setMobileOpen(false)}>
+                    <div className="mobile-nav-menu" onClick={e => e.stopPropagation()}>
+                        <div className="mobile-nav-links">
+                            {user ? (
+                                <>
+                                    <Link to="/chat" onClick={() => setMobileOpen(false)}><Sparkles size={18} /> Novo Chat</Link>
+                                    <Link to="/dashboard" onClick={() => setMobileOpen(false)}>Histórico</Link>
+                                    <Link to="/plans" onClick={() => setMobileOpen(false)}>Planos</Link>
+                                    <Link to="/profile" onClick={() => setMobileOpen(false)}>Meu Perfil</Link>
+                                    {isDev && <Link to="/admin" onClick={() => setMobileOpen(false)} style={{ color: 'var(--danger)' }}>Painel Dev</Link>}
+                                    <button onClick={handleLogout} className="btn btn-secondary" style={{ marginTop: 20 }}>Sair</button>
+                                </>
+                            ) : (
+                                <>
+                                    <a href="/#como-funciona" onClick={() => setMobileOpen(false)}>Como Funciona</a>
+                                    <a href="/#recursos" onClick={() => setMobileOpen(false)}>Recursos</a>
+                                    <Link to="/plans" onClick={() => setMobileOpen(false)}>Planos</Link>
+                                    <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn btn-ghost">Entrar</Link>
+                                    <Link to="/auth?tab=register" onClick={() => setMobileOpen(false)} className="btn btn-primary">Começar grátis</Link>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
             <style>{`
                 @media (max-width: 768px) {
                     .nav-links { display: none !important; }
+                    .mobile-menu-toggle { display: flex !important; }
+                }
+
+                .mobile-nav-overlay {
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0,0,0,0.8);
+                    backdrop-filter: blur(10px);
+                    z-index: 999;
+                    display: flex;
+                    justify-content: flex-end;
+                }
+
+                .mobile-nav-menu {
+                    width: 280px;
+                    height: 100%;
+                    background: var(--bg-card);
+                    border-left: 1px solid var(--border);
+                    padding: 80px 24px 40px;
+                }
+
+                .mobile-nav-links {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+
+                .mobile-nav-links a {
+                    text-decoration: none;
+                    color: var(--text-primary);
+                    font-size: 18px;
+                    font-weight: 700;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
                 }
             `}</style>
         </>
