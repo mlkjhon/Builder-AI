@@ -39,6 +39,9 @@ app.get('/api/health', async (req, res) => {
     let dbStatus = false;
     let dbError = null;
     let usersTableExists = false;
+    let uuidStatus = false;
+    let uuidError = null;
+
     try {
         const pool = require('./db');
         await pool.query('SELECT 1');
@@ -52,6 +55,14 @@ app.get('/api/health', async (req, res) => {
             );
         `);
         usersTableExists = tableCheck.rows[0].exists;
+
+        // Check if uuid-ossp extension and function work
+        try {
+            await pool.query('SELECT uuid_generate_v4()');
+            uuidStatus = true;
+        } catch (e) {
+            uuidError = e.message;
+        }
     } catch (err) {
         dbError = err.message;
         console.error('Health check DB error:', err.message);
@@ -68,10 +79,13 @@ app.get('/api/health', async (req, res) => {
         connectivity: {
             database: dbStatus,
             users_table: usersTableExists,
+            uuid_working: uuidStatus,
+            uuid_error: uuidError,
             dbError: dbError
         }
     });
 });
+
 
 
 
