@@ -102,16 +102,14 @@ export default function Navbar() {
                 </div>
 
                 <div className="navbar-actions" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
-                    {/* Mobile Toggle - Only for Guests */}
-                    {!user && (
-                        <button
-                            onClick={() => setMobileOpen(!mobileOpen)}
-                            className="btn btn-ghost btn-icon mobile-menu-toggle"
-                            style={{ display: 'none' }}
-                        >
-                            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-                        </button>
-                    )}
+                    {/* Mobile Toggle */}
+                    <button
+                        onClick={() => setMobileOpen(!mobileOpen)}
+                        className="btn btn-ghost btn-icon mobile-menu-toggle"
+                        style={{ display: 'none' }}
+                    >
+                        {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                    </button>
 
                     <button
                         onClick={toggleTheme}
@@ -151,16 +149,41 @@ export default function Navbar() {
                     )}
                 </div>
             </nav>
-            {/* Mobile Menu Overlay - Only for Guests */}
-            {mobileOpen && !user && (
+            {/* Mobile Menu Overlay */}
+            {mobileOpen && (
                 <div className="mobile-nav-overlay fade-in" onClick={() => setMobileOpen(false)}>
                     <div className="mobile-nav-menu" onClick={e => e.stopPropagation()}>
                         <div className="mobile-nav-links">
-                            <a href="/#como-funciona" onClick={() => setMobileOpen(false)}>Como Funciona</a>
-                            <a href="/#recursos" onClick={() => setMobileOpen(false)}>Recursos</a>
-                            <Link to="/plans" onClick={() => setMobileOpen(false)}>Planos</Link>
-                            <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn btn-ghost">Entrar</Link>
-                            <Link to="/auth?tab=register" onClick={() => setMobileOpen(false)} className="btn btn-primary">Começar grátis</Link>
+                            {user ? (
+                                <>
+                                    <div style={{ marginBottom: 16, padding: '0 10px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                                        <div className="navbar-avatar" style={{ width: 40, height: 40, fontSize: 16 }}>{user?.name?.[0]?.toUpperCase()}</div>
+                                        <div>
+                                            <div style={{ fontWeight: 700, fontSize: 16 }}>{user.name}</div>
+                                            <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{user.email}</div>
+                                        </div>
+                                    </div>
+                                    <Link to="/chat" onClick={() => setMobileOpen(false)}>Chat</Link>
+                                    <Link to="/dashboard" onClick={() => setMobileOpen(false)}>Histórico</Link>
+                                    <Link to="/profile" onClick={() => setMobileOpen(false)}>Meu Perfil</Link>
+                                    <Link to="/plans" onClick={() => setMobileOpen(false)}>Planos</Link>
+                                    {isDev && (
+                                        <Link to="/admin" onClick={() => setMobileOpen(false)} style={{ color: 'var(--danger)' }}>Painel Admin</Link>
+                                    )}
+                                    <div className="divider" style={{ margin: '10px 0' }}></div>
+                                    <button onClick={handleLogout} className="btn btn-secondary btn-full" style={{ justifyContent: 'center' }}>
+                                        <LogOut size={18} /> Sair
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <a href="/#como-funciona" onClick={() => setMobileOpen(false)}>Como Funciona</a>
+                                    <a href="/#recursos" onClick={() => setMobileOpen(false)}>Recursos</a>
+                                    <Link to="/plans" onClick={() => setMobileOpen(false)}>Planos</Link>
+                                    <Link to="/auth" onClick={() => setMobileOpen(false)} className="btn btn-ghost">Entrar</Link>
+                                    <Link to="/auth?tab=register" onClick={() => setMobileOpen(false)} className="btn btn-primary">Começar grátis</Link>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -64,7 +64,12 @@ export default function AuthPage() {
                 navigate('/chat');
             }
         } catch (err) {
-            toast.error(err.response?.data?.error || 'Algo deu errado. Tente novamente.');
+            const errorMsg = err.response?.data?.error || 'Algo deu errado. Tente novamente.';
+            setError(errorMsg);
+            // Only toast if it's not a common validation error already shown in UI
+            if (errorMsg === 'Algo deu errado. Tente novamente.') {
+                toast.error(errorMsg);
+            }
         } finally {
             setLoading(false);
         }
@@ -114,6 +119,13 @@ export default function AuthPage() {
                             Cadastrar
                         </button>
                     </div>
+
+                    {error && (
+                        <div className="error-msg fade-in" style={{ marginBottom: 20 }}>
+                            <LogIn size={14} style={{ flexShrink: 0 }} />
+                            <span>{error}</span>
+                        </div>
+                    )}
 
                     <form onSubmit={handleSubmit}>
                         {tab === 'register' && (

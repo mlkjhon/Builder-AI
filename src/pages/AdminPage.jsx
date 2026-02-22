@@ -208,22 +208,43 @@ export default function AdminPage() {
                     @keyframes spin { 100% { transform: rotate(360deg); } }
 
                     @media (max-width: 768px) {
-                        .container { padding: 0 16px; margin-top: 20px !important; }
-                        h1 { fontSize: 24px !important; }
-                        p { paddingLeft: 0 !important; fontSize: 13px !important; }
+                        .container { padding: 0 12px; margin-top: 20px !important; }
+                        h1 { font-size: 22px !important; }
+                        h1 svg { width: 24px; height: 24px; }
+                        p { padding-left: 0 !important; font-size: 13px !important; margin-top: 2px !important; }
                         
+                        .card { padding: 0 !important; background: transparent !important; border: none !important; box-shadow: none !important; }
+                        .card > div:first-child { padding: 16px 4px !important; background: transparent !important; }
+
                         table thead { display: none; }
                         table, table tbody, table tr, table td { display: block; width: 100%; }
-                        table tr { margin-bottom: 16px; border: 1px solid var(--border); border-radius: 12px; padding: 8px; background: var(--bg-card); }
-                        table td { padding: 8px 12px !important; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); }
-                        table td:last-child { border-bottom: none; }
+                        table tr { 
+                            margin-bottom: 20px; 
+                            border: 1px solid var(--border); 
+                            border-radius: 16px; 
+                            padding: 12px; 
+                            background: var(--bg-card); 
+                            box-shadow: var(--shadow-sm);
+                        }
+                        table td { 
+                            padding: 12px 8px !important; 
+                            display: flex; 
+                            justify-content: space-between; 
+                            align-items: center; 
+                            border-bottom: 1px solid var(--border); 
+                            font-size: 14px;
+                        }
+                        table td:last-child { border-bottom: none; padding-top: 16px !important; }
                         table td::before {
                             content: attr(data-label);
                             font-weight: 700;
                             font-size: 11px;
                             text-transform: uppercase;
                             color: var(--text-muted);
+                            margin-right: 16px;
                         }
+                        
+                        select { width: auto; max-width: 160px; }
                     }
                 `}</style>
             </div>
