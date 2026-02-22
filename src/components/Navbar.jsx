@@ -18,49 +18,64 @@ export default function Navbar() {
 
     return (
         <>
-            <nav className="navbar">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-                    <Link to={user ? '/chat' : '/'} className="navbar-logo" style={{ fontSize: '20px', letterSpacing: '-0.5px' }}>
-                        <div className="logo-icon" style={{ borderRadius: '8px', padding: '6px' }}>
-                            <Rocket size={20} strokeWidth={2.5} />
+            <nav className="navbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+                    <Link to={user ? '/chat' : '/'} className="navbar-logo" style={{ fontSize: '20px', letterSpacing: '-0.5px', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div className="logo-icon" style={{
+                            background: 'linear-gradient(135deg, #00c6ff 0%, #0072ff 100%)',
+                            borderRadius: '10px',
+                            padding: '6px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            <Rocket size={18} strokeWidth={2.5} color="white" />
                         </div>
-                        <span style={{ fontWeight: 800 }}>Startup Builder</span>
-                        <span style={{ color: 'var(--accent)', fontWeight: 900, marginLeft: 4 }}>AI</span>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>Startup Builder</span>
+                            <span style={{
+                                fontWeight: 900,
+                                marginLeft: 4,
+                                background: 'linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                            }}>AI</span>
+                        </div>
                     </Link>
-
-                    {/* Nav links — different depending on login state */}
-                    <div className="nav-links" style={{ display: 'flex', gap: '24px', fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)' }}>
-                        {user ? (
-                            <>
-                                <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Histórico</Link>
-                                <Link to="/plans" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Planos</Link>
-                                <a href="/#recursos" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Recursos</a>
-                                {isDev && (
-                                    <Link to="/admin" style={{
-                                        textDecoration: 'none',
-                                        color: 'var(--danger)',
-                                        padding: '4px 10px',
-                                        borderRadius: '8px',
-                                        background: 'rgba(239, 68, 68, 0.1)',
-                                        border: '1px solid rgba(239, 68, 68, 0.2)',
-                                        transition: 'all 0.2s',
-                                        fontWeight: 800,
-                                        fontSize: '12px',
-                                        textTransform: 'uppercase'
-                                    }} onMouseOver={e => e.target.style.background = 'rgba(239, 68, 68, 0.2)'} onMouseOut={e => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}>Painel Dev</Link>
-                                )}
-                            </>
-                        ) : (
-                            <>
-                                <a href="/#como-funciona" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Como Funciona</a>
-                                <a href="/#recursos" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Recursos</a>
-                                <Link to="/plans" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Planos</Link>
-                            </>
-                        )}
-                    </div>
                 </div>
 
-                <div className="navbar-actions">
+                {/* Nav links — centralized */}
+                <div className="nav-links" style={{ display: 'flex', gap: '24px', fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)', flex: 1, justifyContent: 'center' }}>
+                    {user ? (
+                        <>
+                            <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Histórico</Link>
+                            <Link to="/plans" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Planos</Link>
+                            <a href="/#recursos" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Recursos</a>
+                            {isDev && (
+                                <Link to="/admin" style={{
+                                    textDecoration: 'none',
+                                    color: 'var(--danger)',
+                                    padding: '4px 10px',
+                                    borderRadius: '8px',
+                                    background: 'rgba(239, 68, 68, 0.1)',
+                                    border: '1px solid rgba(239, 68, 68, 0.2)',
+                                    transition: 'all 0.2s',
+                                    fontWeight: 800,
+                                    fontSize: '12px',
+                                    textTransform: 'uppercase'
+                                }} onMouseOver={e => e.target.style.background = 'rgba(239, 68, 68, 0.2)'} onMouseOut={e => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}>Painel Dev</Link>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <a href="/#como-funciona" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Como Funciona</a>
+                            <a href="/#recursos" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Recursos</a>
+                            <Link to="/plans" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Planos</Link>
+                        </>
+                    )}
+                </div>
+
+                <div className="navbar-actions" style={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: '8px' }}>
                     <button
                         onClick={toggleTheme}
                         className="btn btn-ghost btn-icon"

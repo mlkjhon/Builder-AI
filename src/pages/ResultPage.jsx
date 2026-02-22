@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { Target, Users, Megaphone, Coins, Sparkles, Building2, CheckCircle2, AlertTriangle, ArrowRight, Download, Plus, LayoutDashboard, BrainCircuit, Activity, LineChart, TrendingUp, ShieldAlert, Crosshair } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 function ScoreBar({ value, max = 10, color = 'var(--accent)' }) {
     return (
@@ -61,7 +62,7 @@ export default function ResultPage() {
             a.click();
             URL.revokeObjectURL(url);
         } catch (err) {
-            alert('Erro ao baixar PDF. Tente novamente.');
+            toast.error('Erro ao baixar PDF. Tente novamente.');
         } finally {
             setPdfLoading(false);
         }

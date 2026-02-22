@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { User, Mail, Shield, Camera, Save, CheckCircle, Crown, Zap, Star, ArrowRight, ArrowLeft } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const PLAN_INFO = {
     free: { label: 'Iniciante (Grátis)', color: '#6b7280', icon: Star },
@@ -17,7 +18,6 @@ export default function ProfilePage() {
     const fileInputRef = useRef(null);
 
     const [saving, setSaving] = useState(false);
-    const [success, setSuccess] = useState(false);
     const [name, setName] = useState(user?.name || '');
     const [avatarPreview, setAvatarPreview] = useState(user?.avatar_url || null);
     const [avatarFile, setAvatarFile] = useState(null);
@@ -61,11 +61,10 @@ export default function ProfilePage() {
             const token = localStorage.getItem('token');
             login(token, { ...user, name: res.data.name, avatar_url: res.data.avatar_url });
             setProfileData(res.data);
-            setSuccess(true);
-            setTimeout(() => setSuccess(false), 3000);
+            toast.success('Perfil salvo com sucesso!');
         } catch (err) {
             console.error(err);
-            alert('Erro ao salvar o perfil. Tente novamente.');
+            toast.error('Erro ao salvar o perfil. Tente novamente.');
         } finally {
             setSaving(false);
         }
@@ -196,11 +195,6 @@ export default function ProfilePage() {
 
                     {/* Save button */}
                     <div style={{ marginTop: 24, display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
-                        {success && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--accent)', fontSize: 14, fontWeight: 600 }}>
-                                <CheckCircle size={16} /> Salvo com sucesso!
-                            </div>
-                        )}
                         <button
                             className="btn btn-primary"
                             onClick={handleSave}

@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api';
 import Navbar from '../components/Navbar';
 import { ArrowRight, ArrowLeft, UserPlus, LogIn, Mail, Lock, User as UserIcon } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function AuthPage() {
     const [searchParams] = useSearchParams();
@@ -42,7 +43,7 @@ export default function AuthPage() {
                 navigate('/chat');
             }
         } catch (err) {
-            setError(err.response?.data?.error || 'Algo deu errado. Tente novamente.');
+            toast.error(err.response?.data?.error || 'Algo deu errado. Tente novamente.');
         } finally {
             setLoading(false);
         }
@@ -145,8 +146,6 @@ export default function AuthPage() {
                                 />
                             </div>
                         </div>
-
-                        {error && <div className="error-msg">⚠️ {error}</div>}
 
                         <button
                             type="submit"

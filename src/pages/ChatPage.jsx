@@ -5,6 +5,7 @@ import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import { Sparkles, MessageSquare, Send, Bot, User, Menu, Trash2, Plus, Settings, Save, Heart, MoreVertical, Edit3, Paperclip, X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import toast from 'react-hot-toast';
 
 const TypewriterMessage = ({ content }) => {
     const [displayedText, setDisplayedText] = useState('');
@@ -73,10 +74,10 @@ export default function ChatPage() {
             const token = localStorage.getItem('token');
             login(token, { ...user, preferences });
             setPrefModalOpen(false);
-            alert('Preferências salvas! A IA agora conhece melhor seus gostos.');
+            toast.success('Preferências salvas! A IA agora conhece melhor seus gostos.');
         } catch (err) {
             console.error(err);
-            alert('Erro ao salvar preferências.');
+            toast.error('Erro ao salvar preferências.');
         } finally {
             setPrefLoading(false);
         }
@@ -189,7 +190,7 @@ export default function ChatPage() {
                 return;
             }
             console.error('Send message error:', err);
-            alert(err.response?.data?.error || 'Falha ao enviar mensagem. Tente novamente.');
+            toast.error(err.response?.data?.error || 'Falha ao enviar mensagem. Tente novamente.');
             setMessages(prev => prev.filter(m => m.id !== tempUserMsg.id));
             setInput(textToSend);
         } finally {
@@ -204,7 +205,7 @@ export default function ChatPage() {
 
         let validFiles = files.filter(f => f.type.startsWith('image/'));
         if (validFiles.length === 0) {
-            alert('Por favor, selecione apenas imagens.');
+            toast.error('Por favor, selecione apenas imagens.');
             return;
         }
 
@@ -212,7 +213,7 @@ export default function ChatPage() {
             let limitMessage = 'Você atingiu o limite de imagens.';
             if (activePlan === 'free') limitMessage = 'Plano Grátis: Apenas 1 imagem por vez.';
             else if (activePlan === 'pro') limitMessage = 'Plano Pro: Até 3 imagens por vez.';
-            alert(limitMessage);
+            toast.error(limitMessage);
             validFiles = validFiles.slice(0, MAX_IMAGES - imageFiles.length);
         }
 
@@ -471,7 +472,7 @@ export default function ChatPage() {
                                 className="btn btn-ghost btn-icon attachment-btn"
                                 onClick={() => {
                                     if (imageFiles.length >= MAX_IMAGES) {
-                                        alert(activePlan === 'free' ? 'Plano Grátis: Limite de 1 imagem atingido.' : 'Plano Pro: Limite de 3 imagens atingido.');
+                                        toast.error(activePlan === 'free' ? 'Plano Grátis: Limite de 1 imagem atingido.' : 'Plano Pro: Limite de 3 imagens atingido.');
                                     } else {
                                         fileInputRef.current?.click();
                                     }

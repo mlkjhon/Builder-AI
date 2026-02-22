@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import api from '../api';
 import { Users, Shield, ArrowLeft, RefreshCw, Trash2, Ban, PauseCircle, CheckCircle, UserX } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 export default function AdminPage() {
     const { user } = useAuth();
@@ -38,10 +39,10 @@ export default function AdminPage() {
         try {
             await api.patch(`/api/admin/users/${userId}/plan`, { active_plan: newPlan });
             setUsersList(prev => prev.map(u => u.id === userId ? { ...u, active_plan: newPlan } : u));
-            alert('Plano atualizado com sucesso!');
+            toast.success('Plano atualizado com sucesso!');
         } catch (err) {
             console.error(err);
-            alert('Erro ao atualizar plano');
+            toast.error('Erro ao atualizar plano');
         }
     };
 
@@ -49,10 +50,10 @@ export default function AdminPage() {
         try {
             await api.patch(`/api/admin/users/${userId}/role`, { role: newRole });
             setUsersList(prev => prev.map(u => u.id === userId ? { ...u, role: newRole } : u));
-            alert('Cargo atualizado com sucesso!');
+            toast.success('Cargo atualizado com sucesso!');
         } catch (err) {
             console.error(err);
-            alert(err.response?.data?.error || 'Erro ao atualizar cargo');
+            toast.error(err.response?.data?.error || 'Erro ao atualizar cargo');
         }
     };
 
@@ -60,10 +61,10 @@ export default function AdminPage() {
         try {
             await api.patch(`/api/admin/users/${userId}/status`, { status: newStatus });
             setUsersList(prev => prev.map(u => u.id === userId ? { ...u, status: newStatus } : u));
-            alert(`Status atualizado para ${newStatus}!`);
+            toast.success(`Status atualizado para ${newStatus}!`);
         } catch (err) {
             console.error(err);
-            alert(err.response?.data?.error || 'Erro ao atualizar status');
+            toast.error(err.response?.data?.error || 'Erro ao atualizar status');
         }
     };
 
@@ -73,10 +74,10 @@ export default function AdminPage() {
         try {
             await api.delete(`/api/admin/users/${userId}`);
             setUsersList(prev => prev.filter(u => u.id !== userId));
-            alert('Usuário deletado com sucesso.');
+            toast.success('Usuário deletado com sucesso.');
         } catch (err) {
             console.error(err);
-            alert(err.response?.data?.error || 'Erro ao deletar usuário');
+            toast.error(err.response?.data?.error || 'Erro ao deletar usuário');
         }
     };
 

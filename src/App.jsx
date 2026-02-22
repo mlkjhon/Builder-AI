@@ -10,6 +10,7 @@ import ChatPage from './pages/ChatPage';
 import ProfilePage from './pages/ProfilePage';
 import PlansPage from './pages/PlansPage';
 import AdminPage from './pages/AdminPage';
+import { Toaster } from 'react-hot-toast';
 import './index.css';
 
 export default function App() {
@@ -17,6 +18,16 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                background: 'var(--bg-card)',
+                color: 'var(--text-primary)',
+                border: '1px solid var(--border)'
+              }
+            }}
+          />
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/auth" element={<AuthPage />} />

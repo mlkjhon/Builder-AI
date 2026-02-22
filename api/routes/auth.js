@@ -30,14 +30,14 @@ router.post('/register', async (req, res) => {
         const role = (email === 'postgres' || email.includes('admin') || email.includes('dev')) ? 'admin' : 'user';
 
         const result = await pool.query(
-            'INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role, created_at',
+            'INSERT INTO users (name, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role, avatar_url, active_plan, created_at',
             [name, email, passwordHash, role]
         );
 
         const user = result.rows[0];
-        const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role, avatar_url: user.avatar_url, active_plan: user.active_plan }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-        res.status(201).json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+        res.status(201).json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, avatar_url: user.avatar_url, active_plan: user.active_plan } });
     } catch (err) {
         console.error('Register error:', err);
         res.status(500).json({ error: 'Erro interno do servidor' });
@@ -77,9 +77,9 @@ router.post('/login', async (req, res) => {
             return res.status(401).json({ error: 'Email ou senha incorretos' });
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        const token = jwt.sign({ id: user.id, email: user.email, name: user.name, role: user.role, avatar_url: user.avatar_url, active_plan: user.active_plan }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
-        res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+        res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role, avatar_url: user.avatar_url, active_plan: user.active_plan } });
     } catch (err) {
         console.error('Login error:', err);
         res.status(500).json({ error: 'Erro interno do servidor' });
