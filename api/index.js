@@ -35,17 +35,30 @@ const path = require('path');
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // Health check
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+    let dbStatus = false;
+    try {
+        const pool = require('./db');
+        await pool.query('SELECT 1');
+        dbStatus = true;
+    } catch (err) {
+        console.error('Health check DB error:', err.message);
+    }
+
     res.json({
         status: 'ok',
         message: 'Startup Builder AI Server running 🚀',
         env: {
-            database: !!process.env.DATABASE_URL,
-            gemini: !!process.env.GEMINI_API_KEY,
-            jwt: !!process.env.JWT_SECRET
+            database_configured: !!process.env.DATABASE_URL,
+            gemini_configured: !!process.env.GEMINI_API_KEY,
+            jwt_configured: !!process.env.JWT_SECRET
+        },
+        connectivity: {
+            database: dbStatus
         }
     });
 });
+
 
 // 404
 app.use((req, res) => {
