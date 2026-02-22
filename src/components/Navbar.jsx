@@ -122,7 +122,7 @@ export default function Navbar() {
                                 ) : (
                                     <div className="navbar-avatar" style={{ width: 32, height: 32, fontSize: 13 }}>{initial}</div>
                                 )}
-                                <span style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 600 }}>{user.name}</span>
+                                <span className="hide-on-mobile" style={{ fontSize: 13, color: 'var(--text-secondary)', fontWeight: 600 }}>{user.name}</span>
                             </button>
                             <button onClick={handleLogout} className="btn btn-secondary btn-sm" title="Sair">
                                 <LogOut size={14} />

@@ -98,7 +98,7 @@ export default function ProfilePage() {
                         <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>Gerencie suas informações e preferências</p>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+                    <div className="grid-2" style={{ gap: 24 }}>
                         {/* Avatar section */}
                         <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: 32 }}>
                             <div
