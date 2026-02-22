@@ -9,7 +9,10 @@ async function autoMigrate() {
         return;
     }
 
-    const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+    const pool = new pg.Pool({
+        connectionString: process.env.DATABASE_URL,
+        ssl: { rejectUnauthorized: false }
+    });
 
     try {
         const schemaPath = path.join(__dirname, 'schema.sql');
