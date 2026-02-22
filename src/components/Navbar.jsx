@@ -32,14 +32,22 @@ export default function Navbar() {
                     <div className="nav-links" style={{ display: 'flex', gap: '24px', fontSize: '14px', fontWeight: 600, color: 'var(--text-secondary)' }}>
                         {user ? (
                             <>
-                                {!isDev && (
-                                    <>
-                                        <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Histórico</Link>
-                                        <Link to="/plans" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Planos</Link>
-                                    </>
-                                )}
+                                <Link to="/dashboard" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Histórico</Link>
+                                <Link to="/plans" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Planos</Link>
+                                <a href="/#recursos" style={{ textDecoration: 'none', color: 'inherit', transition: 'color 0.2s' }} onMouseOver={e => e.target.style.color = 'var(--text-primary)'} onMouseOut={e => e.target.style.color = 'var(--text-secondary)'}>Recursos</a>
                                 {isDev && (
-                                    <Link to="/admin" style={{ textDecoration: 'none', color: 'var(--danger)', transition: 'color 0.2s', fontWeight: 800 }} onMouseOver={e => e.target.style.color = '#dc2626'} onMouseOut={e => e.target.style.color = 'var(--danger)'}>Painel Dev</Link>
+                                    <Link to="/admin" style={{
+                                        textDecoration: 'none',
+                                        color: 'var(--danger)',
+                                        padding: '4px 10px',
+                                        borderRadius: '8px',
+                                        background: 'rgba(239, 68, 68, 0.1)',
+                                        border: '1px solid rgba(239, 68, 68, 0.2)',
+                                        transition: 'all 0.2s',
+                                        fontWeight: 800,
+                                        fontSize: '12px',
+                                        textTransform: 'uppercase'
+                                    }} onMouseOver={e => e.target.style.background = 'rgba(239, 68, 68, 0.2)'} onMouseOut={e => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}>Painel Dev</Link>
                                 )}
                             </>
                         ) : (

@@ -208,7 +208,7 @@ export default function LandingPage() {
 
               <p className="hero-subtitle">
                 Descreva sua ideia e nossa Inteligência Artificial gera um plano completo com análise de mercado,
-                estratégia, financeiro e matriz SWOT — pronto para impressionar investidores.
+                estratégia, financeiro e matriz SWOT. Agora com **interrupção de resposta** e **IA personalizada**.
               </p>
 
               {/* Input form */}

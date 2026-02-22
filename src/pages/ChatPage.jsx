@@ -40,6 +40,8 @@ export default function ChatPage() {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState(initialIdea);
     const [loading, setLoading] = useState(false);
+    const [abortController, setAbortController] = useState(null);
+
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [deleteModalId, setDeleteModalId] = useState(null);
     const [prefModalOpen, setPrefModalOpen] = useState(false);
@@ -128,6 +130,14 @@ export default function ChatPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleStopGeneration = () => {
+        if (abortController) {
+            abortController.abort();
+            setLoading(false);
+            setAbortController(null);
+        }
+    };
+
     const handleSend = async (e, forceInput = null) => {
         if (e) e.preventDefault();
         const textToSend = forceInput || input;
@@ -144,42 +154,47 @@ export default function ChatPage() {
         setInput('');
         setLoading(true);
 
+        const controller = new AbortController();
+        setAbortController(controller);
+
         try {
             const payload = {
                 chatId: currentChatId,
                 message: textToSend
             };
-            // Send the first image to backend if there are any (Backend natively supports 1 right now, could be updated if needed, but we send all or first)
-            // Currently backend expects single image object { base64, mimeType }. Let's assume backend takes array `images` if we change it, but for single image compatibility:
             if (imageFiles.length > 0) {
                 payload.images = imageFiles.map(img => ({ base64: img.base64, mimeType: img.mimeType }));
-                payload.image = payload.images[0]; // backward compatibility
+                payload.image = payload.images[0];
             }
-            const res = await api.post('/api/chat', payload);
+            const res = await api.post('/api/chat', payload, {
+                signal: controller.signal
+            });
 
             const { chatId, userMessage, assistantMessage } = res.data;
 
             if (!currentChatId) {
                 setCurrentChatId(chatId);
-                // Also refresh sidebar to show new chat
                 const chatsRes = await api.get('/api/chat');
                 setChats(chatsRes.data);
             }
 
             setMessages(prev => {
-                // Remove temp and add real ones
                 const filterTemp = prev.filter(m => m.id !== tempUserMsg.id);
                 return [...filterTemp, userMessage, { ...assistantMessage, isNew: true }];
             });
             setImageFiles([]);
         } catch (err) {
+            if (err.name === 'CanceledError' || err.name === 'AbortError') {
+                console.log('Generation stopped by user');
+                return;
+            }
             console.error('Send message error:', err);
             alert(err.response?.data?.error || 'Falha ao enviar mensagem. Tente novamente.');
-            // Revert temp message
             setMessages(prev => prev.filter(m => m.id !== tempUserMsg.id));
             setInput(textToSend);
         } finally {
             setLoading(false);
+            setAbortController(null);
         }
     };
 
@@ -411,9 +426,18 @@ export default function ChatPage() {
                         {loading && (
                             <div className="message-row fade-in model">
                                 <div className="message-avatar"><Bot size={18} /></div>
-                                <div className="message-content" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <div className="loader-dots"><span></span><span></span><span></span></div>
-                                    <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Mestre de obras digitais pensando...</span>
+                                <div className="message-content" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                        <div className="loader-dots"><span></span><span></span><span></span></div>
+                                        <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>Mestre de obras digitais pensando...</span>
+                                    </div>
+                                    <button
+                                        onClick={handleStopGeneration}
+                                        className="btn btn-ghost btn-sm"
+                                        style={{ border: '1px solid var(--border)', alignSelf: 'flex-start', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px' }}
+                                    >
+                                        <X size={14} /> Interromper resposta
+                                    </button>
                                 </div>
                             </div>
                         )}
