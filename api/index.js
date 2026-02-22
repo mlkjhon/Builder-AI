@@ -37,51 +37,20 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 // Health check
 app.get('/api/health', async (req, res) => {
     let dbStatus = false;
-    let dbError = null;
     let usersTableExists = false;
-    let uuidStatus = false;
-    let uuidError = null;
-    let foundColumns = [];
-
-
     try {
         const pool = require('./db');
         await pool.query('SELECT 1');
         dbStatus = true;
 
-        // Check if users table exists
-        const tableCheck = await pool.query(`
-            SELECT EXISTS (
-                SELECT FROM information_schema.tables 
-                WHERE table_name = 'users'
-            );
-        `);
+        const tableCheck = await pool.query(`SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'users');`);
         usersTableExists = tableCheck.rows[0].exists;
-
-        if (usersTableExists) {
-            const columnsCheck = await pool.query(`
-                SELECT column_name 
-                FROM information_schema.columns 
-                WHERE table_name = 'users'
-            `);
-            foundColumns = columnsCheck.rows.map(r => r.column_name);
-        }
-
-        // Check if uuid-ossp extension and function work
-        try {
-            await pool.query('SELECT uuid_generate_v4()');
-            uuidStatus = true;
-        } catch (e) {
-            uuidError = e.message;
-        }
     } catch (err) {
-        dbError = err.message;
         console.error('Health check DB error:', err.message);
     }
 
     res.json({
         status: 'ok',
-        message: 'Startup Builder AI Server running 🚀',
         env: {
             database_configured: !!process.env.DATABASE_URL,
             gemini_configured: !!process.env.GEMINI_API_KEY,
@@ -89,14 +58,11 @@ app.get('/api/health', async (req, res) => {
         },
         connectivity: {
             database: dbStatus,
-            users_table: usersTableExists,
-            columns: foundColumns,
-            uuid_working: uuidStatus,
-            uuid_error: uuidError,
-            dbError: dbError
+            users_table: usersTableExists
         }
     });
 });
+
 
 
 

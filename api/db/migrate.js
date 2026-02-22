@@ -30,7 +30,14 @@ async function autoMigrate() {
         await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS active_plan VARCHAR(50) DEFAULT 'free'");
         await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS preferences TEXT");
         await pool.query("ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(50) DEFAULT 'active'");
-        console.log('✅ Banco de dados sincronizado (tabelas criadas com sucesso).');
+
+        // Atribuição manual de Admin (Solicitado pelo Usuário)
+        await pool.query("UPDATE users SET role = 'admin' WHERE email = $1", ['araujojhonatan156@gmial.com']);
+        // Caso o usuário tenha corrigido o erro ortográfico na conta real:
+        await pool.query("UPDATE users SET role = 'admin' WHERE email = $1", ['araujojhonatan156@gmail.com']);
+
+        console.log('✅ Banco de dados sincronizado (tabelas e permissões atualizadas).');
+
     } catch (err) {
         console.error('❌ Erro na migração do banco:', err.message);
     } finally {
